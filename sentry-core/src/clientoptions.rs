@@ -174,6 +174,11 @@ pub struct ClientOptions {
     /// This setting has no effect unless the `logs` feature is enabled at compile-time, as the
     /// feature is a pre-requisite to sending logs.
     pub enable_logs: bool,
+    /// Determines whether captured metrics should be sent to Sentry (defaults to false).
+    ///
+    /// This setting has no effect unless the `metrics` feature is enabled at compile-time,
+    /// as the feature is a prerequisite for sending metrics.
+    pub enable_metrics: bool,
     // Other options not documented in Unified API
     /// Disable SSL verification.
     ///
@@ -276,6 +281,7 @@ impl fmt::Debug for ClientOptions {
             .field("session_mode", &self.session_mode)
             .field("enable_logs", &self.enable_logs)
             .field("before_send_log", &before_send_log)
+            .field("enable_metrics", &self.enable_metrics)
             .field("user_agent", &self.user_agent)
             .finish()
     }
@@ -312,6 +318,7 @@ impl Default for ClientOptions {
             max_request_body_size: MaxRequestBodySize::Medium,
             enable_logs: true,
             before_send_log: None,
+            enable_metrics: false,
         }
     }
 }
