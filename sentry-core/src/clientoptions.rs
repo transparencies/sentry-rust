@@ -5,7 +5,7 @@ use std::time::Duration;
 
 use crate::constants::USER_AGENT;
 use crate::performance::TracesSampler;
-use crate::protocol::{Breadcrumb, Event, Log};
+use crate::protocol::{Breadcrumb, Event, Log, Metric};
 use crate::types::Dsn;
 use crate::{Integration, IntoDsn, TransportFactory};
 
@@ -179,6 +179,11 @@ pub struct ClientOptions {
     /// This setting has no effect unless the `metrics` feature is enabled at compile-time,
     /// as the feature is a prerequisite for sending metrics.
     pub enable_metrics: bool,
+    /// Callback that is executed for each Metric before sending.
+    ///
+    /// This setting has no effect unless the `metrics` feature is enabled at compile-time,
+    /// as the feature is a prerequisite for sending metrics.
+    pub before_send_metric: Option<BeforeCallback<Metric>>,
     // Other options not documented in Unified API
     /// Disable SSL verification.
     ///
@@ -242,6 +247,11 @@ impl fmt::Debug for ClientOptions {
             struct BeforeSendLog;
             self.before_send_log.as_ref().map(|_| BeforeSendLog)
         };
+        let before_send_metric = {
+            #[derive(Debug)]
+            struct BeforeSendMetric;
+            self.before_send_metric.as_ref().map(|_| BeforeSendMetric)
+        };
         #[derive(Debug)]
         struct TransportFactory;
 
@@ -282,6 +292,7 @@ impl fmt::Debug for ClientOptions {
             .field("enable_logs", &self.enable_logs)
             .field("before_send_log", &before_send_log)
             .field("enable_metrics", &self.enable_metrics)
+            .field("before_send_metric", &before_send_metric)
             .field("user_agent", &self.user_agent)
             .finish()
     }
@@ -319,6 +330,7 @@ impl Default for ClientOptions {
             enable_logs: true,
             before_send_log: None,
             enable_metrics: false,
+            before_send_metric: None,
         }
     }
 }
