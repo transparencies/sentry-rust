@@ -1,10 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.48.2
+
+### New Features
+
+- Added `rustls-no-provider` feature flag in the `sentry` crate to allow using the `rustls` transport with a different crypto provider ([#1103](https://github.com/getsentry/sentry-rust/pull/1103)). 
 
 ### Fixes
 
 - Serialize attachment envelope headers as JSON to correctly encode header values ([#1109](https://github.com/getsentry/sentry-rust/pull/1109)).
+- Use checked arithmetic to handle possible overflows ([#1119](https://github.com/getsentry/sentry-rust/pull/1119), [#1121](https://github.com/getsentry/sentry-rust/pull/1121), [#1122](https://github.com/getsentry/sentry-rust/pull/1122)).
 
 ## 0.48.1
 
